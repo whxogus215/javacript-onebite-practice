@@ -1,5 +1,6 @@
 //COMPONENTS
 import PokemonList from "./components/PokemonList.js";
+import Header from "./components/Header.js";
 
 //APIS
 import { getPokemonList } from "./modules/api.js";
@@ -18,6 +19,36 @@ export default function App($app) {
     searchWord: getSearchWord(),
     currentPage: window.location.pathname,
   };
+
+  const header = new Header({
+    $app,
+    initialState: {
+      currentPage: this.state.currentPage,
+      searchWord: this.state.searchWord,
+    },
+    handleClick: async () => {
+      history.pushState(null, null, "/");
+      const pokemonList = await getPokemonList();
+      this.setState({
+        ...this.state,
+        pokemonList: pokemonList,
+        type: "",
+        searchWord: getSearchWord(),
+        currentPage: "/",
+      });
+    },
+    handleSearch: async (searchWord) => {
+      const newUrl = `?search=${searchWord}`;
+      history.pushState(null, null, newUrl);
+      const pokemonList = await getPokemonList(this.state.type, searchWord);
+      this.setState({
+        ...this.state,
+        searchWord: searchWord,
+        pokemonList: pokemonList,
+        currentPage: newUrl,
+      });
+    },
+  });
 
   const pokemonList = new PokemonList({
     $app,
@@ -45,6 +76,10 @@ export default function App($app) {
 
   this.setState = (newState) => {
     this.state = newState;
+    header.setState({
+      searchWord: this.state.searchWord,
+      currentPage: this.state.currentPage,
+    });
     pokemonList.setState(this.state.pokemonList);
   };
 

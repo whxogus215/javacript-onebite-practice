@@ -15,7 +15,7 @@ export default function PokemonList({
   this.handleTypeClick = handleTypeClick;
 
   this.template = () => {
-    let temp = "";
+    let temp = [];
     if (this.state) {
       this.state.forEach((elm) => {
         temp += `<div class="pokemon-wrapper">
