@@ -10,7 +10,7 @@ export const request = async (startIdx, region, sortBy, searchWord) => {
     }
 
     if (sortBy) {
-      url += `&sortBy=${sortBy}`;
+      url += `&sort=${sortBy}`;
     }
     if (searchWord) {
       url += `&search=${searchWord}`;
